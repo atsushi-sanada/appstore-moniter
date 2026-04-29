@@ -143,7 +143,7 @@ class AppStoreConnectClient:
                 "available,preOrderEnabled,releaseDate,preOrderPublishDate,"
                 "contentStatuses,territory"
             ),
-            "limit[territoryAvailabilities]": "200",
+            "limit[territoryAvailabilities]": "50",
         }
         data = self._GetJson(f"/v1/apps/{app.app_id}/appAvailabilityV2", params)
         return ParsePreOrderApp(company_code, app, data)
