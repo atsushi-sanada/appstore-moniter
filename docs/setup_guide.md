@@ -89,14 +89,14 @@
 
 ## 6. STEP 4: 通知先と会社コードを設定する
 
-1. GitHub Actions用は `config/settings.actions.json` を開きます。
+1. リポジトリ内の `config/settings.json` を開きます。
 2. `company_code` を会社識別用のコードへ変更します。
 3. `notify_days` を通知開始日数へ変更します。
 4. `slack.channel` を通知先チャンネルへ変更します。
 5. 変更をコミットしてGitHub Enterpriseへpushします。
 
-ローカルPCで直接実行する場合だけ、秘密情報入りの `config/settings.json` を使います。
-このファイルはGit管理しません。
+`config/settings.json` には秘密情報を書きません。
+秘密情報はGitHub Secrets、またはローカルPCの環境変数に設定します。
 
 設定例:
 

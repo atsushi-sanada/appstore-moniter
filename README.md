@@ -17,7 +17,7 @@ App Store Connect APIから会社の全アプリを毎日ポーリングし、
 ## クイックスタート
 
 1. `pip install -r requirements.txt`
-2. ローカル実行用に `config/settings.json` を用意
+2. `config/settings.json` の会社コードとSlackチャンネルを確認
 3. `python src/appstore_moniter.py --source fixture --dry-run`
 
 ---
@@ -27,7 +27,7 @@ App Store Connect APIから会社の全アプリを毎日ポーリングし、
 - 前提条件: Python 3.10以上
 - 必要権限: App Store Connect APIキー、Slack Bot Token
 
-1. ローカル実行は `config/settings.json`、Actions実行は `config/settings.actions.json` を編集
+1. `config/settings.json` の `company_code`、`notify_days`、`poll_time` を編集
 2. `APPSTORE_ISSUER_ID`、`APPSTORE_KEY_ID`、`APPSTORE_PRIVATE_KEY_PATH` を設定
 3. `SLACK_BOT_TOKEN` を設定し、`slack.channel` に通知先を設定
 4. Slack Botを通知先チャンネルへ参加させる
@@ -52,6 +52,6 @@ App Store Connect APIから会社の全アプリを毎日ポーリングし、
 ## その他
 
 - 運用場所はGitHub EnterpriseのPrivateリポジトリとGitHub Actionsを第一候補にします
-- `config/settings.json` はローカル専用です。秘密鍵とSlack TokenはGit管理しないでください
+- `config/settings.json` は共通設定です。秘密鍵とSlack Tokenは環境変数またはGitHub Secretsで管理してください
 - 固定時刻はGitHub Actionsのcron、または `--daemon` 常駐で管理できます
 - 詳細な設定手順は `docs/setup_guide.md` を参照してください

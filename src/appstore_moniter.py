@@ -474,6 +474,9 @@ def ReadConfigSecret(
 ) -> str:
     """設定ファイルまたは環境変数から秘密情報を取得する。
 
+    環境変数名が設定済みで値が未設定の場合は、API実行やSlack通知まで
+    エラーにしない。fixture実行では外部サービスの秘密情報を不要にするため。
+
     Args:
         data: 設定JSON。
         direct_key: 直接指定キー。
@@ -490,11 +493,45 @@ def ReadConfigSecret(
     if not isinstance(env_name, str) or not env_name.strip():
         raise ValueError(f"config requires {direct_key} or {env_key}.")
 
-    value = os.environ.get(env_name.strip())
-    if not value:
-        raise ValueError(f"environment variable is required: {env_name}")
+    return os.environ.get(env_name.strip(), "")
 
-    return value
+
+def ValidateAppStoreConnectConfig(config: AppStoreConnectConfig) -> None:
+    """App Store Connect API実行に必要な秘密情報を検証する。
+
+    Args:
+        config: App Store Connect API認証設定。
+
+    Raises:
+        ValueError: 必須設定が不足している場合。
+    """
+
+    missing_keys: list[str] = []
+    if not config.issuer_id:
+        missing_keys.append("APPSTORE_ISSUER_ID")
+    if not config.key_id:
+        missing_keys.append("APPSTORE_KEY_ID")
+    if not str(config.private_key_path):
+        missing_keys.append("APPSTORE_PRIVATE_KEY_PATH")
+
+    if missing_keys:
+        raise ValueError(
+            "environment variables are required: " + ", ".join(missing_keys)
+        )
+
+
+def ValidateSlackConfig(config: SlackConfig) -> None:
+    """Slack通知に必要な秘密情報を検証する。
+
+    Args:
+        config: Slack通知設定。
+
+    Raises:
+        ValueError: 必須設定が不足している場合。
+    """
+
+    if not config.bot_token:
+        raise ValueError("environment variable is required: SLACK_BOT_TOKEN")
 
 
 def FetchPreOrderApps(config: CompanyConfig, source: str) -> list[PreOrderApp]:
@@ -514,6 +551,7 @@ def FetchPreOrderApps(config: CompanyConfig, source: str) -> list[PreOrderApp]:
     if config.app_store_connect is None:
         raise ValueError("app_store_connect config is required for api source.")
 
+    ValidateAppStoreConnectConfig(config.app_store_connect)
     client = AppStoreConnectClient(config.app_store_connect)
     pre_order_apps: list[PreOrderApp] = []
     for app in client.FetchApps():
@@ -751,6 +789,7 @@ def RunOnce(args: argparse.Namespace) -> int:
             if config.slack is None:
                 print("slack config is required for Slack notification.", file=sys.stderr)
                 return 2
+            ValidateSlackConfig(config.slack)
             NotifyToSlack(message, config.slack)
         else:
             NotifyToStdout(message)
