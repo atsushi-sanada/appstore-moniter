@@ -1,1 +1,1 @@
-"""App Store Checker package."""
+"""App Store Moniter package."""

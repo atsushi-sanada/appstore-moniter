@@ -1,4 +1,4 @@
-# App Store Checker セットアップガイド
+# App Store Moniter セットアップガイド
 
 ## 目次
 
@@ -51,7 +51,7 @@
 3. **「Integrations」** タブを開きます。
 4. **「App Store Connect API」** の **「Keys」** を開きます。
 5. **「+」** をクリックします。
-6. Key Nameに `appstore-checker` と入力します。
+6. Key Nameに `appstore-moniter` と入力します。
 7. Accessはアプリ情報を読める権限を選びます。
 8. **「Generate」** をクリックします。
 9. 表示された **Issuer ID** と **Key ID** を控えます。
@@ -64,19 +64,19 @@
 1. ブラウザで [Slack API Apps](https://api.slack.com/apps) を開きます。
 2. **「Create New App」** をクリックします。
 3. **「From scratch」** を選びます。
-4. App Nameに `appstore-checker` と入力します。
+4. App Nameに `appstore-moniter` と入力します。
 5. 対象Workspaceを選び、**「Create App」** をクリックします。
 6. 左メニューの **「OAuth & Permissions」** を開きます。
 7. **「Bot Token Scopes」** に `chat:write` を追加します。
 8. **「Install to Workspace」** をクリックします。
 9. 表示された `xoxb-` で始まる **Bot User OAuth Token** を控えます。
-10. 通知先Slackチャンネルで `/invite @appstore-checker` を実行します。
+10. 通知先Slackチャンネルで `/invite @appstore-moniter` を実行します。
 
 > **確認ポイント:** `xoxb-` で始まるTokenがあり、Botが通知先チャンネルに参加していればOKです。
 
 ## 5. STEP 3: GitHub EnterpriseにSecretsを登録する
 
-1. `https://github.enish.jp/doge/appstore-checker` を開きます。
+1. `https://github.enish.jp/doge/appstore-moniter` を開きます。
 2. **「Settings」** を開きます。
 3. **「Secrets and variables」** の **「Actions」** を開きます。
 4. **「New repository secret」** をクリックします。
@@ -89,11 +89,14 @@
 
 ## 6. STEP 4: 通知先と会社コードを設定する
 
-1. リポジトリ内の `config/settings.json` を開きます。
+1. GitHub Actions用は `config/settings.actions.json` を開きます。
 2. `company_code` を会社識別用のコードへ変更します。
 3. `notify_days` を通知開始日数へ変更します。
 4. `slack.channel` を通知先チャンネルへ変更します。
 5. 変更をコミットしてGitHub Enterpriseへpushします。
+
+ローカルPCで直接実行する場合だけ、秘密情報入りの `config/settings.json` を使います。
+このファイルはGit管理しません。
 
 設定例:
 
@@ -115,7 +118,7 @@
 
 1. GitHub Enterpriseのリポジトリを開きます。
 2. **「Actions」** タブを開きます。
-3. **「App Store Checker」** を選びます。
+3. **「App Store Moniter」** を選びます。
 4. **「Run workflow」** をクリックします。
 5. 実行が終わるまで待ちます。
 6. Slackチャンネルに通知が届くか確認します。
@@ -135,7 +138,7 @@ GitHub Actionsが毎日決まった時刻に自動実行します。
 
 1. GitHub Enterpriseのリポジトリを開きます。
 2. **「Actions」** を開きます。
-3. **「App Store Checker」** workflowを無効化します。
+3. **「App Store Moniter」** workflowを無効化します。
 
 再起動する場合:
 
@@ -165,7 +168,7 @@ GitHub Actionsが毎日決まった時刻に自動実行します。
 
 確認 1: GitHub EnterpriseでActionsが有効か確認してください。
 
-確認 2: `.github/workflows/appstore-checker.yml` がmainブランチにあるか確認してください。
+確認 2: `.github/workflows/appstore-moniter.yml` がmainブランチにあるか確認してください。
 
 確認 3: GitHub Enterprise Serverの場合、Runnerが外部通信できるか確認してください。
 

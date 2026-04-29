@@ -1,8 +1,8 @@
-"""appstore_checkerの通知判定テスト。"""
+"""appstore_moniterの通知判定テスト。"""
 
 from datetime import date, datetime
 
-from src.appstore_checker import (
+from src.appstore_moniter import (
     AppSummary,
     BuildMessage,
     BuildNotificationTargets,

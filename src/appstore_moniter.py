@@ -21,7 +21,7 @@ from typing import Any
 
 
 DEFAULT_CONFIG_PATH = Path("config/settings.json")
-DEFAULT_STATE_PATH = Path(".appstore_checker_state.json")
+DEFAULT_STATE_PATH = Path(".appstore_moniter_state.json")
 DEFAULT_NOTIFY_DAYS = 7
 DEFAULT_POLL_TIME = "09:00"
 DEFAULT_API_BASE_URL = "https://api.appstoreconnect.apple.com"
@@ -827,9 +827,9 @@ def ParseArgs(argv: list[str]) -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  python src/appstore_checker.py --source fixture --dry-run\n"
-            "  python src/appstore_checker.py --notify slack\n"
-            "  python src/appstore_checker.py --daemon --notify slack\n"
+            "  python src/appstore_moniter.py --source fixture --dry-run\n"
+            "  python src/appstore_moniter.py --notify slack\n"
+            "  python src/appstore_moniter.py --daemon --notify slack\n"
         ),
     )
     parser.add_argument(

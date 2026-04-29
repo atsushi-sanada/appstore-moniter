@@ -1,4 +1,4 @@
-name: App Store Checker
+name: App Store Moniter
 
 on:
   schedule:
@@ -27,8 +27,8 @@ jobs:
         env:
           APPSTORE_PRIVATE_KEY: ${{ secrets.APPSTORE_PRIVATE_KEY }}
 
-      - name: Run checker
-        run: python src/appstore_checker.py --notify slack
+      - name: Run moniter
+        run: python src/appstore_moniter.py --config config/settings.actions.json --notify slack
         env:
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}

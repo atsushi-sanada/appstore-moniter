@@ -1,5 +1,7 @@
-.appstore_checker_state.json
+.appstore_moniter_state.json
 config/apps.json
+config/settings.json
+key.md
 AuthKey_*.p8
 __pycache__/
 .pytest_cache/
