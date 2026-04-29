@@ -90,7 +90,8 @@
 ## 6. STEP 4: 通知先と会社コードを設定する
 
 1. リポジトリ内の `config/settings.json` を開きます。
-2. `company_code` を会社識別用のコードへ変更します。
+2. `company_code` を通知表示用の任意コードへ変更します。
+   App Store Connect上の項目ではないため、会社名やチーム名の短い英数字を指定します。
 3. `notify_days` を通知開始日数へ変更します。
 4. `slack.channel` を通知先チャンネルへ変更します。
 5. 変更をコミットしてGitHub Enterpriseへpushします。
