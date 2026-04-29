@@ -23,7 +23,15 @@ jobs:
 
       - name: Write App Store Connect private key
         run: |
-          printf '%s' "${APPSTORE_PRIVATE_KEY}" > "${RUNNER_TEMP}/AuthKey.p8"
+          if printf '%s' "${APPSTORE_PRIVATE_KEY}" | grep -q "BEGIN PRIVATE KEY"; then
+            printf '%s\n' "${APPSTORE_PRIVATE_KEY}" > "${RUNNER_TEMP}/AuthKey.p8"
+          else
+            {
+              echo "-----BEGIN PRIVATE KEY-----"
+              printf '%s\n' "${APPSTORE_PRIVATE_KEY}"
+              echo "-----END PRIVATE KEY-----"
+            } > "${RUNNER_TEMP}/AuthKey.p8"
+          fi
         env:
           APPSTORE_PRIVATE_KEY: ${{ secrets.APPSTORE_PRIVATE_KEY }}
 

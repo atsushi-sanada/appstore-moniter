@@ -82,7 +82,8 @@
 4. **「New repository secret」** をクリックします。
 5. `APPSTORE_ISSUER_ID` にIssuer IDを登録します。
 6. `APPSTORE_KEY_ID` にKey IDを登録します。
-7. `APPSTORE_PRIVATE_KEY` に `.p8` ファイルの中身をすべて登録します。
+7. `APPSTORE_PRIVATE_KEY` に `.p8` ファイルの中身を登録します。
+   `-----BEGIN PRIVATE KEY-----` と `-----END PRIVATE KEY-----` がない本文部分だけでも動作します。
 8. `SLACK_BOT_TOKEN` にSlackのBot User OAuth Tokenを登録します。
 
 > **確認ポイント:** Actions Secretsに4つの名前が表示されればOKです。
