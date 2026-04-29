@@ -10,7 +10,7 @@
   },
   "slack": {
     "bot_token_env": "SLACK_BOT_TOKEN",
-    "channel": "C08PEEL6TNK"
+    "channel": "#test-sanada"
   },
   "fixture_apps": [
     {
