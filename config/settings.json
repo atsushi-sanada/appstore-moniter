@@ -1,6 +1,6 @@
 {
-  "company_code": "doge",
-  "notify_days": 7,
+  "company_code": "enish",
+  "notify_days": 31,
   "poll_time": "09:00",
   "app_store_connect": {
     "issuer_id_env": "APPSTORE_ISSUER_ID",
@@ -10,7 +10,7 @@
   },
   "slack": {
     "bot_token_env": "SLACK_BOT_TOKEN",
-    "channel": "#release-alerts"
+    "channel": "C08PEEL6TNK"
   },
   "fixture_apps": [
     {
