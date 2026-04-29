@@ -1,0 +1,36 @@
+name: App Store Checker
+
+on:
+  schedule:
+    # GitHub ActionsのcronはUTCです。この設定は日本時間09:00に実行します。
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  notify-preorders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write App Store Connect private key
+        run: |
+          printf '%s' "${APPSTORE_PRIVATE_KEY}" > "${RUNNER_TEMP}/AuthKey.p8"
+        env:
+          APPSTORE_PRIVATE_KEY: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+      - name: Run checker
+        run: python src/appstore_checker.py --notify slack
+        env:
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APPSTORE_PRIVATE_KEY_PATH: ${{ runner.temp }}/AuthKey.p8
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

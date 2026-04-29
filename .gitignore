@@ -1,0 +1,6 @@
+.appstore_checker_state.json
+config/apps.json
+AuthKey_*.p8
+__pycache__/
+.pytest_cache/
+.venv/
