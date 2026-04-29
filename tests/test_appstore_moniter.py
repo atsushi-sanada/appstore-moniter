@@ -1,9 +1,13 @@
 """appstore_moniterの通知判定テスト。"""
 
 from datetime import date, datetime
+from pathlib import Path
 
 from src.appstore_moniter import (
     AppSummary,
+    AppStoreConnectApiError,
+    AppStoreConnectClient,
+    AppStoreConnectConfig,
     BuildMessage,
     BuildNotificationTargets,
     CalculateNextRun,
@@ -155,3 +159,29 @@ def test_calculate_next_run_returns_tomorrow_after_poll_time() -> None:
     next_run = CalculateNextRun(datetime(2026, 5, 1, 10, 0), "09:00")
 
     assert next_run == datetime(2026, 5, 2, 9, 0)
+
+
+def test_fetch_pre_order_app_skips_missing_availability() -> None:
+    """App Availabilityが存在しないアプリはスキップする。"""
+
+    config = AppStoreConnectConfig(
+        "issuer",
+        "key",
+        Path("AuthKey.p8"),
+        "https://example.com",
+    )
+    client = object.__new__(AppStoreConnectClient)
+    client._config = config
+    client._token = "token"
+
+    def raise_not_found(path_or_url: str, params: dict[str, str]) -> dict[str, object]:
+        raise AppStoreConnectApiError(404, "{}")
+
+    client._GetJson = raise_not_found
+
+    pre_order_app = client.FetchPreOrderApp(
+        "company-a",
+        AppSummary("1", "Missing Availability App", "com.example.missing"),
+    )
+
+    assert pre_order_app is None

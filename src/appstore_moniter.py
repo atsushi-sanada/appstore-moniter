@@ -145,7 +145,13 @@ class AppStoreConnectClient:
             ),
             "limit[territoryAvailabilities]": "50",
         }
-        data = self._GetJson(f"/v1/apps/{app.app_id}/appAvailabilityV2", params)
+        try:
+            data = self._GetJson(f"/v1/apps/{app.app_id}/appAvailabilityV2", params)
+        except AppStoreConnectApiError as error:
+            if error.status == 404:
+                return None
+            raise
+
         return ParsePreOrderApp(company_code, app, data)
 
     def _GetJson(self, path_or_url: str, params: dict[str, str]) -> dict[str, Any]:
@@ -171,9 +177,24 @@ class AppStoreConnectClient:
                 return json.loads(response.read().decode("utf-8"))
         except urllib.error.HTTPError as error:
             body = error.read().decode("utf-8", errors="replace")
-            raise RuntimeError(f"App Store Connect API failed: {body}") from error
+            raise AppStoreConnectApiError(error.code, body) from error
         except urllib.error.URLError as error:
             raise RuntimeError(f"App Store Connect API failed: {error}") from error
+
+
+class AppStoreConnectApiError(RuntimeError):
+    """App Store Connect APIのHTTPエラー。"""
+
+    def __init__(self, status: int, body: str) -> None:
+        """HTTPステータスとレスポンス本文を保持する。
+
+        Args:
+            status: HTTPステータスコード。
+            body: エラーレスポンス本文。
+        """
+
+        super().__init__(f"App Store Connect API failed: {body}")
+        self.status = status
 
 
 def CreateAppStoreConnectToken(config: AppStoreConnectConfig) -> str:
