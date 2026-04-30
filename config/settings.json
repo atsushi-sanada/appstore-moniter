@@ -1,6 +1,6 @@
 {
   "company_code": "enish",
-  "notify_days": 31,
+  "notify_days": 60,
   "poll_time": "09:00",
   "app_store_connect": {
     "issuer_id_env": "APPSTORE_ISSUER_ID",
