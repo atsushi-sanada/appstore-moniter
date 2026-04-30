@@ -126,13 +126,18 @@
 6. Slackチャンネルに通知が届くか確認します。
 
 > **確認ポイント:** Actionsが緑色の成功表示になればOKです。
-> 対象アプリがない日はSlack通知が出ず、ログに `No apps need notification today.` と表示されます。
+> 対象アプリがない日はSlack通知が出ず、ログに確認したアプリ一覧と
+> `No apps need notification today.` が表示されます。
 
 ## 8. 日常の使い方
 
 通常は何もしなくて問題ありません。
 GitHub Actionsが毎日決まった時刻に自動実行します。
 通知が来た場合は、App Store Connectで該当アプリの予約注文リリース予定日を確認してください。
+
+定期実行時刻を変更する場合は `.github/workflows/appstore-moniter.yml` の
+`cron` を変更します。GitHub ActionsのcronはUTCのため、日本時間9:00に実行したい場合は
+`0 0 * * *` を指定します。
 
 ## 9. システムの停止と再起動
 

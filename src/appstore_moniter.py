@@ -149,10 +149,17 @@ class AppStoreConnectClient:
             data = self._GetJson(f"/v1/apps/{app.app_id}/appAvailabilityV2", params)
         except AppStoreConnectApiError as error:
             if error.status == 404:
+                PrintAppCheckStatus(app, "availability_not_found")
                 return None
             raise
 
-        return ParsePreOrderApp(company_code, app, data)
+        pre_order_app = ParsePreOrderApp(company_code, app, data)
+        if pre_order_app is None:
+            PrintAppCheckStatus(app, "not_preorder")
+        else:
+            PrintPreOrderCheckStatus(pre_order_app)
+
+        return pre_order_app
 
     def _GetJson(self, path_or_url: str, params: dict[str, str]) -> dict[str, Any]:
         """App Store Connect APIからJSONを取得する。
@@ -567,7 +574,14 @@ def FetchPreOrderApps(config: CompanyConfig, source: str) -> list[PreOrderApp]:
     """
 
     if source == "fixture":
-        return [CreateFixturePreOrderApp(config.company_code, app) for app in config.fixture_apps]
+        pre_order_apps = [
+            CreateFixturePreOrderApp(config.company_code, app)
+            for app in config.fixture_apps
+        ]
+        PrintCheckSummary(len(pre_order_apps), source)
+        for pre_order_app in pre_order_apps:
+            PrintPreOrderCheckStatus(pre_order_app)
+        return pre_order_apps
 
     if config.app_store_connect is None:
         raise ValueError("app_store_connect config is required for api source.")
@@ -575,12 +589,60 @@ def FetchPreOrderApps(config: CompanyConfig, source: str) -> list[PreOrderApp]:
     ValidateAppStoreConnectConfig(config.app_store_connect)
     client = AppStoreConnectClient(config.app_store_connect)
     pre_order_apps: list[PreOrderApp] = []
-    for app in client.FetchApps():
+    apps = client.FetchApps()
+    PrintCheckSummary(len(apps), source)
+
+    for app in apps:
         pre_order_app = client.FetchPreOrderApp(config.company_code, app)
         if pre_order_app is not None:
             pre_order_apps.append(pre_order_app)
 
     return pre_order_apps
+
+
+def PrintCheckSummary(app_count: int, source: str) -> None:
+    """確認対象アプリ数を標準出力へ出す。
+
+    Args:
+        app_count: 確認対象アプリ数。
+        source: 取得元。
+    """
+
+    print(f"Checked app source={source} count={app_count}")
+
+
+def PrintAppCheckStatus(app: AppSummary, status: str) -> None:
+    """アプリ確認結果を標準出力へ出す。
+
+    Args:
+        app: アプリ基本情報。
+        status: 確認ステータス。
+    """
+
+    print(
+        "Checked app "
+        f"id={app.app_id} name={app.name} bundle_id={app.bundle_id} "
+        f"status={status}"
+    )
+
+
+def PrintPreOrderCheckStatus(app: PreOrderApp) -> None:
+    """予約注文中アプリの確認結果を標準出力へ出す。
+
+    Args:
+        app: 予約注文中アプリ。
+    """
+
+    territories = ",".join(app.territories) if app.territories else "unknown"
+    content_statuses = (
+        ",".join(app.content_statuses) if app.content_statuses else "unknown"
+    )
+    print(
+        "Checked app "
+        f"id={app.app_id} name={app.name} bundle_id={app.bundle_id} "
+        f"status=preorder release_date={app.release_date.isoformat()} "
+        f"territories={territories} content_statuses={content_statuses}"
+    )
 
 
 def CreateFixturePreOrderApp(

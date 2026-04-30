@@ -10,6 +10,7 @@ App Store Connect APIから会社の全アプリを毎日ポーリングし、
 
 - 会社コード単位で監視対象を識別します
 - App Store Connect APIで参照可能な全アプリを取得します
+- 確認したアプリ一覧と予約注文ステータスをActionsログへ出します
 - 指定SlackチャンネルへBot Tokenで通知します
 
 ---
@@ -53,5 +54,5 @@ App Store Connect APIから会社の全アプリを毎日ポーリングし、
 
 - 運用場所はGitHub EnterpriseのPrivateリポジトリとGitHub Actionsを第一候補にします
 - `config/settings.json` は共通設定です。秘密鍵とSlack Tokenは環境変数またはGitHub Secretsで管理してください
-- 固定時刻はGitHub Actionsのcron、または `--daemon` 常駐で管理できます
+- 固定時刻は `.github/workflows/appstore-moniter.yml` のcron、または `--daemon` 常駐で管理できます
 - 詳細な設定手順は `docs/setup_guide.md` を参照してください
